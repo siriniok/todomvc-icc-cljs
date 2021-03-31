@@ -9,7 +9,8 @@
                  [re-frame "1.2.0"]
                  [day8.re-frame/tracing "0.6.2"]
                  [garden "1.3.10"]
-                 [ns-tracker "0.4.0"]]
+                 [ns-tracker "0.4.0"]
+                 [clj-commons/secretary "1.2.4"]]
 
   :plugins [[cider/cider-nrepl "0.25.6"]
             [lein-shadow "0.3.1"]
