@@ -1,7 +1,6 @@
 # todomvc-icc-cljs
 
-A [re-frame](https://github.com/day8/re-frame) application designed to ... well, that part is up to
-you.
+Based on the original [Reframe TodoMVC](https://github.com/day8/re-frame/tree/master/examples/todomvc) example.
 
 ## Getting Started
 
