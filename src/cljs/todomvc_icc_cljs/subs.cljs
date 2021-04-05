@@ -6,25 +6,31 @@
 ;;
 ;; Runs on every db change
 
-(defn extract-showing
+(defn extract-visibility-filter
   [db _]
-  (:showing db))
+  (:visibility-filter db))
 
-(defn extract-sorted-todos
+(defn extract-todos
   [db _]
   (:todos db))
 
-(reg-sub :showing extract-showing)
-(reg-sub :sorted-todos extract-sorted-todos)
+(reg-sub :visibility-filter/index extract-visibility-filter)
+(reg-sub :todos/index extract-todos)
 
 ;; -------------------------------------------------------------------------------------
 ;; Materialized Views Layer
+;;
+(reg-sub
+  :visibility-filter
+  :<- [:visibility-filter/index]
+  (fn [visibility-filter-index]
+    visibility-filter-index))
 
 (reg-sub
   :todos
-  :<- [:sorted-todos]
-  (fn [sorted-todos query-v _]
-    (vals sorted-todos)))
+  :<- [:todos/index]
+  (fn [todos-index query-v _]
+    (vals todos-index)))
 
 (reg-sub
   :todos/by-id
@@ -35,9 +41,9 @@
 (reg-sub
   :todos/visible
   :<- [:todos]
-  :<- [:showing]
-  (fn [[todos showing] _]
-    (let [filter-fn (case showing
+  :<- [:visibility-filter]
+  (fn [[todos visibility-filter] _]
+    (let [filter-fn (case visibility-filter
                       :active (complement :done)
                       :done   :done
                       :all    identity)]

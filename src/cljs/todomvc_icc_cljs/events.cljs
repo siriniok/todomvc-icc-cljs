@@ -43,10 +43,10 @@
 
 
 (reg-event-db
-  :set-showing
-  [check-spec-interceptor (path :showing)]
-  (fn [old-showing-value [_ new-showing-value]]
-    new-showing-value))
+  :visibility-filter/apply
+  [check-spec-interceptor (path :visibility-filter)]
+  (fn [old-visibility-filter [_ new-visibility-filter]]
+    new-visibility-filter))
 
 
 (reg-event-db

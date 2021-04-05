@@ -12,16 +12,16 @@
                  (s/map-of ::id ::todo)
                  #(instance? PersistentTreeMap %)
                  ))
-(s/def ::showing
+(s/def ::visibility-filter
   #{:all
     :active
     :done
     })
-(s/def ::db (s/keys :req-un [::todos ::showing]))
+(s/def ::db (s/keys :req-un [::todos ::visibility-filter]))
 
 (def default-db
   {:todos   (sorted-map)
-   :showing :all})
+   :visibility-filter :all})
 
 
 (def ls-key "todos-reframe")

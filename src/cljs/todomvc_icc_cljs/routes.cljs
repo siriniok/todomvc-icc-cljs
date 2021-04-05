@@ -8,8 +8,8 @@
     [goog History]
     [goog.history EventType]))
 
-(defroute "/" [] (dispatch [:set-showing :all]))
-(defroute "/:filter" [filter] (dispatch [:set-showing (keyword filter)]))
+(defroute "/" [] (dispatch [:visibility-filter/apply :all]))
+(defroute "/:filter" [filter] (dispatch [:visibility-filter/apply (keyword filter)]))
 
 (defonce history
   (doto (History.)

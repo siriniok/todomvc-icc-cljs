@@ -75,9 +75,9 @@
 (defn footer-controls
   []
   (let [[active done] (<subs [:todos/footer-counts])
-        showing       (<subs [:showing])
+        visibility-filter       (<subs [:visibility-filter])
         a-fn          (fn [filter-kw txt]
-                        [:a {:class (when (= filter-kw showing) "selected")
+                        [:a {:class (when (= filter-kw visibility-filter) "selected")
                              :href (str "#/" (name filter-kw))} txt])]
     [:footer.footer
      [:span.todo-count
