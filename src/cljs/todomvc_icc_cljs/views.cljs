@@ -28,30 +28,30 @@
                                       nil)})])))
 
 
-(defn todo-item
-  []
+(defn todo-item []
   (let [editing (r/atom false)]
-    (fn [{:keys [id done title]}]
-      [:li {:class (str (when done "completed ")
-                        (when @editing "editing"))}
-        [:div.view
+    (fn [id]
+      (let [{:keys [id done title]} (<subs [:todos/by-id id])]
+        [:li {:class (str (when done "completed ")
+                          (when @editing "editing"))}
+         [:div.view
           [:input.toggle
-            {:type "checkbox"
-             :checked done
-             :on-change #(>emit [:toggle-done id])}]
+           {:type "checkbox"
+            :checked done
+            :on-change #(>emit [:toggle-done id])}]
           [:label
-            {:on-double-click #(reset! editing true)}
-            title]
+           {:on-double-click #(reset! editing true)}
+           title]
           [:button.destroy
-            {:on-click #(>emit [:delete-todo id])}]]
-        (when @editing
-          [todo-input
+           {:on-click #(>emit [:delete-todo id])}]]
+         (when @editing
+           [todo-input
             {:class "edit"
              :title title
              :on-save #(if (seq %)
-                          (>emit [:save id %])
-                          (>emit [:delete-todo id]))
-             :on-stop #(reset! editing false)}])])))
+                         (>emit [:save id %])
+                         (>emit [:delete-todo id]))
+             :on-stop #(reset! editing false)}])]))))
 
 
 (defn task-list
@@ -69,7 +69,7 @@
           "Mark all as complete"]
         [:ul.todo-list
           (for [todo  visible-todos]
-            ^{:key (:id todo)} [todo-item todo])]]))
+            ^{:key (:id todo)} [todo-item (:id todo)])]]))
 
 
 (defn footer-controls

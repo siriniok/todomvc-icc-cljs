@@ -27,6 +27,12 @@
     (vals sorted-todos)))
 
 (reg-sub
+  :todos/by-id
+  :<-[:todos]
+  (fn [todos [_ id]]
+    (first (filter #(= (:id %) id) todos))))
+
+(reg-sub
   :todos/visible
   :<- [:todos]
   :<- [:showing]
