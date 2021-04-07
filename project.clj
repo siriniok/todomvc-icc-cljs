@@ -106,6 +106,7 @@
   {:dev
    {:dependencies [[binaryage/devtools "1.0.2"]
                    [day8.re-frame/re-frame-10x "1.0.2"]
+                   [spec-provider "0.4.14"]
                    [re-frisk "1.3.12"]]
     :source-paths ["dev"]}
 
