@@ -1,13 +1,13 @@
 (ns todomvc-icc-cljs.core
   (:require
-   [reagent.dom :as rdom]
-   [re-frame.core :as rf :refer [dispatch dispatch-sync]]
-   [todomvc-icc-cljs.routes :as routes]
-   [todomvc-icc-cljs.events :as events]
-   [todomvc-icc-cljs.subs :as subs]
-   [todomvc-icc-cljs.views :as views]
-   [todomvc-icc-cljs.config :as config])
-)
+    [reagent.dom :as rdom]
+    [re-frame.core :as rf :refer [dispatch dispatch-sync]]
+    [todomvc-icc-cljs.routes :as routes]
+    [todomvc-icc-cljs.events :as events]
+    [todomvc-icc-cljs.subs :as subs]
+    [todomvc-icc-cljs.views :as views]
+    [todomvc-icc-cljs.config :as config])
+  )
 
 (defn dev-setup []
   (when config/debug?

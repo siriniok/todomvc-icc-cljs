@@ -14,5 +14,5 @@
 (defonce history
   (doto (History.)
     (gevents/listen EventType.NAVIGATE
-                   (fn [^js/goog.History.Event event] (secretary/dispatch! (.-token event))))
+                    (fn [^js/goog.History.Event event] (secretary/dispatch! (.-token event))))
     (.setEnabled true)))

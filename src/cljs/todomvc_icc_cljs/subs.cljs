@@ -10,16 +10,21 @@
   [db _]
   (:visibility-filter db))
 
-(defn extract-todos
+(defn extract-todo
   [db _]
-  (:todos db))
+  (db :todo))
+
+(defn extract-list
+  [db _]
+  (db :list))
 
 (reg-sub :visibility-filter/index extract-visibility-filter)
-(reg-sub :todos/index extract-todos)
+(reg-sub :todo/index extract-todo)
+(reg-sub :list/index extract-list)
 
 ;; -------------------------------------------------------------------------------------
 ;; Materialized Views Layer
-;;
+
 (reg-sub
   :visibility-filter
   :<- [:visibility-filter/index]
@@ -27,43 +32,78 @@
     visibility-filter-index))
 
 (reg-sub
-  :todos
-  :<- [:todos/index]
-  (fn [todos-index query-v _]
-    (vals todos-index)))
+  :todo/all
+  :<- [:todo/index]
+  (fn [todo-index query-v _]
+    (todo-index :by-id)))
 
 (reg-sub
-  :todos/by-id
-  :<-[:todos]
-  (fn [todos [_ id]]
-    (first (filter #(= (:id %) id) todos))))
+  :list/all
+  :<- [:list/index]
+  (fn [list-index query-v _]
+    (list-index :by-id)))
 
 (reg-sub
-  :todos/visible
-  :<- [:todos]
-  :<- [:visibility-filter]
+  :todo
+  :<-[:todo/all]
+  (fn [todo [_ id]]
+    (get todo id)))
+
+(reg-sub
+  :list
+  :<-[:list/all]
+  (fn [list [_ id]]
+    (get list id)))
+
+(reg-sub
+  :list/todos
+
+  (fn [[_ id]]
+    [(subscribe [:list id]) (subscribe [:todo/all])])
+
+  (fn [[list todo] _]
+    (map #(get todo %) (list :tasks))))
+
+(reg-sub
+  :list/visible-todos
+
+  (fn [[_ id]]
+    [(subscribe [:list/todos id])
+     (subscribe [:visibility-filter])])
+
   (fn [[todos visibility-filter] _]
     (let [filter-fn (case visibility-filter
-                      :active (complement :done)
-                      :done   :done
+                      :active (complement :completed)
+                      :completed   :completed
                       :all    identity)]
-      (filter filter-fn todos))))
+      (->> todos
+           (filter filter-fn)
+           (map #(% :id))))))
 
 (reg-sub
-  :todos/all-complete?
-  :<- [:todos]
-  (fn [todos _]
-    (every? :done todos)))
+  :list/all-complete?
+
+  (fn [[_ id]]
+    [(subscribe [:list/todos id])])
+
+  (fn [[todos] _]
+    (every? :completed todos)))
 
 (reg-sub
-  :todos/completed-count
-  :<- [:todos]
-  (fn [todos _]
-    (count (filter :done todos))))
+  :list/completed-count
+
+  (fn [[_ id]]
+    [(subscribe [:list/todos id])])
+
+  (fn [[todos] _]
+    (count (filter :completed todos))))
 
 (reg-sub
-  :todos/footer-counts
-  :<- [:todos]
-  :<- [:todos/completed-count]
+  :list/counts
+
+  (fn [[_ id]]
+    [(subscribe [:list/todos id])
+     (subscribe [:list/completed-count id])])
+
   (fn [[todos completed] _]
     [(- (count todos) completed) completed]))
