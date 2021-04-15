@@ -34,13 +34,13 @@
 (reg-sub
   :todo/all
   :<- [:todo/index]
-  (fn [todo-index query-v _]
+  (fn [todo-index _]
     (todo-index :by-id)))
 
 (reg-sub
   :list/all
   :<- [:list/index]
-  (fn [list-index query-v _]
+  (fn [list-index _]
     (list-index :by-id)))
 
 (reg-sub

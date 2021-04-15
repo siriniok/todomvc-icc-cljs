@@ -52,7 +52,7 @@
   [(inject-cofx :local-store-todo)
    (inject-cofx :local-store-list)
    check-spec-interceptor]
-  (fn-traced [{:keys [db local-store-todo local-store-list]} _]
+  (fn-traced [{:keys [local-store-todo local-store-list]} _]
              {:db (assoc default-db :todo local-store-todo :list local-store-list)}))
 
 
@@ -76,8 +76,8 @@
 (reg-event-db
   :todo/edit
   todo-interceptors
-  (fn-traced  [todo [_ id title]]
-             (assoc-in todo [:by-id id :title] title)))
+  (fn [todo [_ id title]]
+    (assoc-in todo [:by-id id :title] title)))
 
 
 (reg-event-db
@@ -147,9 +147,9 @@
   db-interceptors
   (fn [{:keys [db]} [_ id]]
     (let [not-completed-ids (->> (get-in db [:list :by-id id :tasks ])
-                             (map #(get-in db [:todo :by-id %]))
-                             (filter (complement :completed))
-                             (map :id))
+                                 (map #(get-in db [:todo :by-id %]))
+                                 (filter (complement :completed))
+                                 (map :id))
           events (mapv (fn [%] [:dispatch [:todo/toggle-completed %]])
                        not-completed-ids)]
       {:fx events})))
@@ -158,5 +158,5 @@
 (reg-event-db
   :visibility-filter/apply
   [check-spec-interceptor (path :visibility-filter)]
-  (fn [old-visibility-filter [_ new-visibility-filter]]
+  (fn [_old-visibility-filter [_ new-visibility-filter]]
     new-visibility-filter))

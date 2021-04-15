@@ -1,9 +1,8 @@
 (ns todomvc-icc-cljs.routes
   (:require-macros [secretary.core :refer [defroute]])
-  (:require [re-frame.core :as rf :refer [dispatch dispatch-sync]]
+  (:require [re-frame.core :as rf :refer [dispatch]]
             [secretary.core :as secretary]
-            [goog.events :as gevents]
-            [goog.history.EventType :as EventType])
+            [goog.events :as gevents])
   (:import
     [goog History]
     [goog.history EventType]))
