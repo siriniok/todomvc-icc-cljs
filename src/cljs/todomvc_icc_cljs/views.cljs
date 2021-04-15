@@ -81,7 +81,7 @@
 
 
 (defn main-section [id]
-  (let [visible-todos (<subs [:list/visible-todos id])
+  (let [visible-todos (<subs [:filter-list-todo/all-ids id])
         all-complete? (<subs [:list/all-complete? id])]
     [:section.main
      [:input#toggle-all.toggle-all

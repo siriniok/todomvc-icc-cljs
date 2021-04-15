@@ -56,7 +56,7 @@
     (get list id)))
 
 (reg-sub
-  :list/todos
+  :list-todo/all
 
   (fn [[_ id]]
     [(subscribe [:list id]) (subscribe [:todo/all])])
@@ -65,10 +65,10 @@
     (map #(get todo %) (list :tasks))))
 
 (reg-sub
-  :list/visible-todos
+  :filter-list-todo/all-ids
 
   (fn [[_ id]]
-    [(subscribe [:list/todos id])
+    [(subscribe [:list-todo/all id])
      (subscribe [:visibility-filter])])
 
   (fn [[todos visibility-filter] _]
@@ -84,7 +84,7 @@
   :list/all-complete?
 
   (fn [[_ id]]
-    [(subscribe [:list/todos id])])
+    [(subscribe [:list-todo/all id])])
 
   (fn [[todos] _]
     (every? :completed todos)))
@@ -93,7 +93,7 @@
   :list/completed-count
 
   (fn [[_ id]]
-    [(subscribe [:list/todos id])])
+    [(subscribe [:list-todo/all id])])
 
   (fn [[todos] _]
     (count (filter :completed todos))))
@@ -102,7 +102,7 @@
   :list/counts
 
   (fn [[_ id]]
-    [(subscribe [:list/todos id])
+    [(subscribe [:list-todo/all id])
      (subscribe [:list/completed-count id])])
 
   (fn [[todos completed] _]
