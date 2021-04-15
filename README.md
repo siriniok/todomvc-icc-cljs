@@ -1,6 +1,53 @@
-# todomvc-icc-cljs
+# clojurescript + re-frame TodoMVC example (with ICC)
 
-Based on the original [Reframe TodoMVC](https://github.com/day8/re-frame/tree/master/examples/todomvc) example.
+This is an example demonstrating Independently Connected Components pattern with clojurescript + re-frame.
+
+Based on the original [Reframe TodoMVC](https://github.com/day8/re-frame/tree/master/examples/todomvc) and [React + Redux + Reselect TodoMVC Example (with ICC)](https://github.com/mr-mig/todomvc-icc) example.
+
+The example was extended to handle several lists (to show the additional comlexity). Have a look at exercises below.
+
+There is also [a slide deck](http://slides.com/mr-mig/microsoft-to-do-23) from Alexey Migutsky's talk on ICC at FDConf 2017 (the slides are 2D, you can go down in some sections).
+
+
+## Things to notice 
+
+1. Passing IDs through components (`main-section`) rather than whole entities
+1. Binding components to specific handlers (`toggle-todo-checkbox`,
+   `delete-todo-button`)
+1. Specializing components and reusing a template (`todo-input-new` and
+   `todo-input-edit`)
+1. Domains (todo, list and filter) and linking domains (`list-todo`,
+   `filter-list-todo`)
+1. Render props (`todo-item`)
+1. Dependent events using `add-post-event-callback` and `:dispatch` effect.
+
+Dependent events are tricky in re-frame as they are async, so you need to prepare for intermediate states on the view layer. A potential source of errors. Maybe there is a better way to do this, like reversing the events chain, but I would like to postpone such design desicions.
+
+
+## What are the benefits?
+
+This approach provides a clean structure for components and store.  
+Changing the app and moving things around are much easier than with other approaches.
+ 
+If you want to **feel** the benefits, you can fork this repo and make these exercise changes to the app:
+
+1. Rename the list to "Home".
+1. Add a second list called "Work". It should work independently from "Home" list.
+1. Make task counts work per list
+1. Add a third todo list called "All" containing all tasks from both "Home" and "Work" lists.
+1. When todo item is in "All" list, add a label to every todo item showing which list ("Home" or "Work") it belongs to.
+1. Extract filters (All, Active, Completed) into components and remove them from "Home" and "Work" list.
+1. Move a chevron (complete all tasks) to the footer of "All" list. Move completed todos counter to the header of "All" list.
+1. Make "Work"/"Home" and "All" lists opaque when any todo is edited in "Home"/"Work" list (you probably need a new domain?).
+1. Add drag'n'drop between "Work" and "Home" lists.
+1. Add drag'n'drop sorting inside "Work" and "Home" lists.
+1. Measure the performance. Try passing primitives instead of todo model in props
+1. Make it possible to have 10000 items in any list
+    - generate test data on app start
+    - use virtualized list
+
+The exercises are listed by increasing complexity
+
 
 ## Getting Started
 
